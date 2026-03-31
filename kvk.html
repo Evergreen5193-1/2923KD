@@ -257,7 +257,6 @@ document.getElementById('kvk-cards').innerHTML = KVK.map((k,i)=>`
     <div class="kvk-card-header">
       <div>
         <div class="kvk-card-num">${i===0?'Latest KvK':'#'+i+' KvK Ago'}</div>
-        <div class="kvk-card-label">${k.label}</div>
       </div>
       ${k.current?'<span class="kvk-badge">Latest</span>':''}
     </div>
