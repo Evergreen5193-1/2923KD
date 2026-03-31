@@ -185,7 +185,7 @@ nav{
 }
 .kvk-card.current{border-color:rgba(124,58,237,0.5)}
 .kvk-card.current::after{
-  content:'CURRENT';position:absolute;top:16px;right:16px;
+  content:'LATEST';position:absolute;top:16px;right:16px;
   font-size:10px;font-weight:800;letter-spacing:2px;
   background:var(--purple);color:#fff;padding:4px 10px;border-radius:999px;
 }
@@ -197,10 +197,14 @@ nav{
 .kvk-stat-value{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:700}
 .kvk-stat-value.kp{color:var(--purple3)}
 .kvk-stat-value.dead{color:var(--red)}
-.kvk-bar-wrap{margin-top:16px}
-.kvk-bar-label{font-size:11px;color:var(--muted);margin-bottom:6px}
-.kvk-bar{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
-.kvk-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--purple),var(--blue));transition:width 1s ease}
+.kvk-change{
+  margin-top:14px;display:flex;align-items:center;gap:6px;
+  font-size:13px;font-weight:700;padding:8px 12px;border-radius:8px;
+}
+.kvk-change.up{background:rgba(16,185,129,0.1);color:var(--green)}
+.kvk-change.down{background:rgba(248,113,113,0.1);color:var(--red)}
+.kvk-change.baseline{background:rgba(100,116,139,0.1);color:var(--muted2);font-weight:600}
+.kvk-change-arrow{font-size:10px}
 
 /* ── CTA SECTION ── */
 .cta-section{
@@ -286,25 +290,25 @@ footer{
 <section class="stats-overview">
   <div class="section">
     <div class="section-header">
-      <div class="section-overline">Current Season</div>
+      <div class="section-overline">KD Stats</div>
       <h2 class="section-title">Kingdom at a Glance</h2>
-      <p class="section-desc">Live stats from our active governors this season.</p>
+      <p class="section-desc">Total lifetime stats for Kingdom 2923.</p>
     </div>
     <div class="overview-grid">
       <div class="overview-item">
+        <div class="ov-label">Seed</div>
+        <div class="ov-value purple">C</div>
+        <div class="ov-sub">Kingdom seed tier</div>
+      </div>
+      <div class="overview-item">
+        <div class="ov-label">Total Power</div>
+        <div class="ov-value blue">7.1B</div>
+        <div class="ov-sub">Kingdom total power</div>
+      </div>
+      <div class="overview-item">
         <div class="ov-label">Total Kill Points</div>
-        <div class="ov-value blue">15.8B</div>
-        <div class="ov-sub">Season KP earned</div>
-      </div>
-      <div class="overview-item">
-        <div class="ov-label">T5 Kills</div>
-        <div class="ov-value purple">705M</div>
-        <div class="ov-sub">Tier 5 units killed</div>
-      </div>
-      <div class="overview-item">
-        <div class="ov-label">Healed Units</div>
-        <div class="ov-value gold">862M</div>
-        <div class="ov-sub">Units healed in hospital</div>
+        <div class="ov-value cyan">212.5B</div>
+        <div class="ov-sub">All-time KP earned</div>
       </div>
     </div>
   </div>
@@ -354,17 +358,29 @@ footer{
 
 <script>
 const KVK = [
-  { label:'Latest KvK', kp:15.6, dead:112, tag:'current' },
-  { label:'1 KvK Ago',  kp:13.5, dead:40,  tag:'' },
-  { label:'2 KvKs Ago', kp:13.4, dead:76.8, tag:'' },
-  { label:'3 KvKs Ago', kp:14.2, dead:85.4, tag:'' },
+  { kp:15.6, dead:112, tag:'current' },
+  { kp:13.5, dead:40,  tag:'' },
+  { kp:13.4, dead:76.8, tag:'' },
+  { kp:14.2, dead:85.4, tag:'' },
 ];
-const maxKP = Math.max(...KVK.map(k=>k.kp));
 
-document.getElementById('kvk-grid').innerHTML = KVK.map((k,i) => `
+document.getElementById('kvk-grid').innerHTML = KVK.map((k,i) => {
+  const label = i === 0 ? 'Latest KvK' : i === 1 ? '1 KvK Ago' : i + ' KvKs Ago';
+  const prev = KVK[i + 1];
+  let changeHtml = '';
+  if (prev) {
+    const pct = ((k.kp - prev.kp) / prev.kp * 100).toFixed(1);
+    const up = +pct >= 0;
+    changeHtml = `<div class="kvk-change ${up ? 'up' : 'down'}">
+      <span class="kvk-change-arrow">${up ? '▲' : '▼'}</span>
+      <span>${up ? '+' : ''}${pct}% vs prev KvK</span>
+    </div>`;
+  } else {
+    changeHtml = `<div class="kvk-change baseline"><span>Baseline</span></div>`;
+  }
+  return `
   <div class="kvk-card ${k.tag}">
-    <div class="kvk-number">${i === 0 ? 'Latest KvK' : '#' + i + ' KvK Ago'}</div>
-    <div class="kvk-title">${k.label}</div>
+    <div class="kvk-number">${label}</div>
     <div class="kvk-stat">
       <span class="kvk-stat-label">Kill Points</span>
       <span class="kvk-stat-value kp">${k.kp}B</span>
@@ -373,13 +389,9 @@ document.getElementById('kvk-grid').innerHTML = KVK.map((k,i) => `
       <span class="kvk-stat-label">Deaths</span>
       <span class="kvk-stat-value dead">${k.dead}M</span>
     </div>
-    <div class="kvk-bar-wrap">
-      <div class="kvk-bar-label">KP Performance</div>
-      <div class="kvk-bar">
-        <div class="kvk-bar-fill" style="width:${Math.round((k.kp/maxKP)*100)}%"></div>
-      </div>
-    </div>
-  </div>`).join('');
+    ${changeHtml}
+  </div>`;
+}).join('');
 </script>
 </body>
 </html>
