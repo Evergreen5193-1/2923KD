@@ -207,25 +207,81 @@ nav{
 .kvk-change-arrow{font-size:10px}
 
 /* ── PARTNERS ── */
-.partners-section{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.partners-row{display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap}
+.partners-section{
+  background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 50%,var(--bg) 100%);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.partners-section::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(124,58,237,0.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.partners-heading{text-align:center;margin-bottom:12px}
+.partners-eyebrow{
+  font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:3px;
+  font-weight:700;margin-bottom:10px;display:block;
+}
+.partners-title{
+  font-family:'Space Grotesk',sans-serif;font-size:1.9rem;font-weight:800;
+  color:#fff;margin-bottom:8px;
+}
+.partners-subtitle{font-size:14px;color:var(--muted);margin-bottom:48px}
+.partners-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:24px;max-width:800px;margin:0 auto;
+}
 .partner-card{
-  display:flex;align-items:center;gap:14px;
-  background:var(--s1);border:1px solid var(--border);border-radius:14px;
-  padding:20px 28px;transition:all .3s;text-decoration:none;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  background:var(--s1);border:1px solid var(--border);border-radius:20px;
+  padding:40px 32px;transition:all .35s cubic-bezier(.4,0,.2,1);
+  text-decoration:none;position:relative;overflow:hidden;
 }
-.partner-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 12px 40px rgba(124,58,237,0.15)}
-.partner-icon{
-  width:44px;height:44px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:22px;flex-shrink:0;
+.partner-card::before{
+  content:'';position:absolute;inset:0;opacity:0;transition:opacity .35s;
+  border-radius:20px;
 }
-.partner-icon.infocat{background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(34,211,238,0.2));border:1px solid rgba(59,130,246,0.3)}
-.partner-icon.prokingdoms{background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(167,139,250,0.2));border:1px solid rgba(124,58,237,0.3)}
-.partner-info{}
-.partner-name{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:2px}
-.partner-desc{font-size:12px;color:var(--muted)}
-.partners-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;text-align:center;margin-bottom:28px;font-weight:600}
+.partner-card.infocat::before{
+  background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(109,40,217,0.05));
+}
+.partner-card.prokingdoms::before{
+  background:linear-gradient(135deg,rgba(220,38,38,0.08),rgba(239,68,68,0.04));
+}
+.partner-card:hover{transform:translateY(-6px);border-color:var(--border2)}
+.partner-card.infocat:hover{box-shadow:0 20px 60px rgba(124,58,237,0.25);border-color:rgba(124,58,237,0.5)}
+.partner-card.prokingdoms:hover{box-shadow:0 20px 60px rgba(220,38,38,0.2);border-color:rgba(220,38,38,0.4)}
+.partner-card:hover::before{opacity:1}
+.partner-logo-wrap{
+  width:100px;height:100px;border-radius:22px;overflow:hidden;
+  margin-bottom:24px;flex-shrink:0;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s;
+}
+.partner-card:hover .partner-logo-wrap{transform:scale(1.06)}
+.partner-card.infocat:hover .partner-logo-wrap{box-shadow:0 12px 40px rgba(124,58,237,0.5)}
+.partner-card.prokingdoms:hover .partner-logo-wrap{box-shadow:0 12px 40px rgba(220,38,38,0.4)}
+.partner-logo-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.partner-name{
+  font-family:'Space Grotesk',sans-serif;font-size:1.25rem;font-weight:800;
+  color:#fff;margin-bottom:8px;letter-spacing:-.02em;
+}
+.partner-desc{
+  font-size:13.5px;color:var(--muted2);line-height:1.55;margin-bottom:24px;
+  max-width:220px;
+}
+.partner-visit{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  padding:8px 18px;border-radius:8px;transition:all .25s;
+}
+.partner-card.infocat .partner-visit{
+  background:rgba(124,58,237,0.15);color:var(--accent);border:1px solid rgba(124,58,237,0.3);
+}
+.partner-card.prokingdoms .partner-visit{
+  background:rgba(220,38,38,0.12);color:#f87171;border:1px solid rgba(220,38,38,0.3);
+}
+.partner-card:hover .partner-visit{opacity:.85}
+.partner-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;text-align:center;margin-bottom:28px;font-weight:600}
 
 /* ── CTA SECTION ── */
 .cta-section{
@@ -353,22 +409,28 @@ footer{
 
 <!-- PARTNERS -->
 <section class="partners-section">
-  <div class="section" style="padding-top:60px;padding-bottom:60px">
-    <div class="partners-label">Proud Partners</div>
-    <div class="partners-row">
-      <a href="https://www.infocat.cc" target="_blank" class="partner-card">
-        <div class="partner-icon infocat">🐱</div>
-        <div class="partner-info">
-          <div class="partner-name">InfoCat</div>
-          <div class="partner-desc">RoK Stats & Analytics</div>
+  <div class="section" style="padding-top:80px;padding-bottom:80px">
+    <div class="partners-heading">
+      <span class="partners-eyebrow">Trusted Partners</span>
+      <div class="partners-title">Built With the Best</div>
+      <div class="partners-subtitle">KD 2923 is proud to partner with the top resources in Rise of Kingdoms</div>
+    </div>
+    <div class="partners-grid">
+      <a href="https://www.infocat.cc" target="_blank" class="partner-card infocat">
+        <div class="partner-logo-wrap">
+          <img src="infocat.png" alt="InfoCat Logo">
         </div>
+        <div class="partner-name">InfoCat</div>
+        <div class="partner-desc">The #1 stats &amp; analytics platform for Rise of Kingdoms. Track governors, alliances, and more.</div>
+        <span class="partner-visit">Visit InfoCat ↗</span>
       </a>
-      <a href="https://www.prokingdoms.com" target="_blank" class="partner-card">
-        <div class="partner-icon prokingdoms">👑</div>
-        <div class="partner-info">
-          <div class="partner-name">ProKingdoms</div>
-          <div class="partner-desc">Rise of Kingdoms Community</div>
+      <a href="https://www.prokingdoms.com" target="_blank" class="partner-card prokingdoms">
+        <div class="partner-logo-wrap">
+          <img src="prokingdoms.png" alt="ProKingdoms Logo">
         </div>
+        <div class="partner-name">ProKingdoms</div>
+        <div class="partner-desc">Your go-to Rise of Kingdoms community hub for guides, tools, and competitive resources.</div>
+        <span class="partner-visit">Visit ProKingdoms ↗</span>
       </a>
     </div>
   </div>
