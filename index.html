@@ -206,6 +206,27 @@ nav{
 .kvk-change.baseline{background:rgba(100,116,139,0.1);color:var(--muted2);font-weight:600}
 .kvk-change-arrow{font-size:10px}
 
+/* ── PARTNERS ── */
+.partners-section{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.partners-row{display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap}
+.partner-card{
+  display:flex;align-items:center;gap:14px;
+  background:var(--s1);border:1px solid var(--border);border-radius:14px;
+  padding:20px 28px;transition:all .3s;text-decoration:none;
+}
+.partner-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 12px 40px rgba(124,58,237,0.15)}
+.partner-icon{
+  width:44px;height:44px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+}
+.partner-icon.infocat{background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(34,211,238,0.2));border:1px solid rgba(59,130,246,0.3)}
+.partner-icon.prokingdoms{background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(167,139,250,0.2));border:1px solid rgba(124,58,237,0.3)}
+.partner-info{}
+.partner-name{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:2px}
+.partner-desc{font-size:12px;color:var(--muted)}
+.partners-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;text-align:center;margin-bottom:28px;font-weight:600}
+
 /* ── CTA SECTION ── */
 .cta-section{
   background:linear-gradient(135deg,var(--bg2),var(--s1));
@@ -255,6 +276,7 @@ footer{
     <a href="index.html" class="nav-link active">Home</a>
     <a href="stats.html" class="nav-link">Governor Stats</a>
     <a href="kvk.html" class="nav-link">KvK History</a>
+    <a href="org.html" class="nav-link">Organization</a>
     <a href="https://discord.gg/94FVuYrJhV" target="_blank" class="nav-discord">Join Discord ↗</a>
   </div>
 </nav>
@@ -268,7 +290,7 @@ footer{
     Rise of Kingdoms
   </div>
   <h1>2923</h1>
-  <p class="hero-tagline">Res Non Verba.</p>
+  <p class="hero-tagline">Rise. Conquer. Dominate.</p>
   <p class="hero-sub">Kingdom 2923 · Season in Progress</p>
   <div class="hero-actions">
     <a href="https://discord.gg/94FVuYrJhV" target="_blank" class="btn-primary">
@@ -292,7 +314,7 @@ footer{
     <div class="section-header">
       <div class="section-overline">KD Stats</div>
       <h2 class="section-title">Kingdom at a Glance</h2>
-      <p class="section-desc">Total stats for Kingdom 2923.</p>
+      <p class="section-desc">Total lifetime stats for Kingdom 2923.</p>
     </div>
     <div class="overview-grid">
       <div class="overview-item">
@@ -325,6 +347,29 @@ footer{
     <div class="kvk-grid" id="kvk-grid"></div>
     <div style="text-align:center;margin-top:40px">
       <a href="kvk.html" class="btn-secondary">View Detailed KvK Breakdown →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="partners-section">
+  <div class="section" style="padding-top:60px;padding-bottom:60px">
+    <div class="partners-label">Proud Partners</div>
+    <div class="partners-row">
+      <a href="https://www.infocat.cc" target="_blank" class="partner-card">
+        <div class="partner-icon infocat">🐱</div>
+        <div class="partner-info">
+          <div class="partner-name">InfoCat</div>
+          <div class="partner-desc">RoK Stats & Analytics</div>
+        </div>
+      </a>
+      <a href="https://www.prokingdoms.com" target="_blank" class="partner-card">
+        <div class="partner-icon prokingdoms">👑</div>
+        <div class="partner-info">
+          <div class="partner-name">ProKingdoms</div>
+          <div class="partner-desc">Rise of Kingdoms Community</div>
+        </div>
+      </a>
     </div>
   </div>
 </section>
