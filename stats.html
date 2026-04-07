@@ -146,6 +146,17 @@ td{padding:12px 16px;font-size:13px;white-space:nowrap}
 .id-cell{color:var(--muted);font-size:11px;font-family:monospace}
 .kp-val{color:var(--purple3);font-weight:700}
 .pts-val{color:var(--blue2)}
+.goal-val{color:var(--muted2)}
+.goal-pct-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.goal-pct-label{font-size:12px;font-weight:700}
+.goal-pct-label.pct-met{color:#34d399}
+.goal-pct-label.pct-half{color:var(--gold)}
+.goal-pct-label.pct-low{color:var(--red)}
+.goal-bar{width:72px;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden}
+.goal-bar-fill{height:100%;border-radius:2px;transition:width .3s}
+.goal-bar-fill.pct-met{background:linear-gradient(90deg,#10b981,#34d399)}
+.goal-bar-fill.pct-half{background:linear-gradient(90deg,#d97706,#f59e0b)}
+.goal-bar-fill.pct-low{background:linear-gradient(90deg,#dc2626,#f87171)}
 .dead-val{color:var(--red)}
 .green-val{color:var(--green)}
 .gold-val{color:var(--gold)}
@@ -317,7 +328,9 @@ footer{
         <th data-col="name">Governor</th>
         <th data-col="governor_id">ID</th>
         <th data-col="kill_points_diff" class="td-right">Kill Points ▲</th>
-        <th data-col="points_difference" class="td-right">Points ▲</th>
+        <th data-col="score" class="td-right">Points ▲</th>
+        <th data-col="goal" class="td-right">Point Goal</th>
+        <th data-col="goal_pct" class="td-right">Goal %</th>
         <th data-col="power_difference" class="td-right">Power Loss</th>
         <th data-col="latest_power" class="td-right">Power Now</th>
         <th data-col="dead_diff" class="td-right">Deaths ▲</th>
@@ -343,6 +356,14 @@ const DATA = [{"rank": 7, "governor_id": 54394720, "name": "Evеrgreen", "kingdo
 const maxKP = Math.max(...DATA.filter(p=>p.kill_points_diff>0).map(p=>p.kill_points_diff));
 
 let sortCol='rank_2923', sortDir=1, page=1, perPage=50, filtered=[...DATA];
+
+// Precompute DKP score: T4×4 + T5×10 + Dead×20
+// Goal = 200% of starting power (min_power)
+DATA.forEach(p => {
+  p.score = (p.kills_iv_diff||0)*4 + (p.kills_v_diff||0)*10 + (p.dead_diff||0)*20;
+  p.goal  = (p.min_power||0) * 2;
+  p.goal_pct = p.goal > 0 ? p.score / p.goal * 100 : 0;
+});
 
 const fmt = n => (!n||n===0)?'—':Number(n).toLocaleString();
 
@@ -385,7 +406,7 @@ function renderTable(){
   document.getElementById('count-shown').textContent=total?`${start+1}–${Math.min(start+perPage,total)}`:'0';
   document.getElementById('count-total').textContent=total.toLocaleString();
   const tbody=document.getElementById('tbody');
-  if(!rows.length){tbody.innerHTML='<tr><td colspan="12"><div class="no-results"><h3>No results</h3><p>Adjust your search or filters.</p></div></td></tr>';return}
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="14"><div class="no-results"><h3>No results</h3><p>Adjust your search or filters.</p></div></td></tr>';return}
   const MEDALS={1:'🥇',2:'🥈',3:'🥉'};
   tbody.innerHTML=rows.map(p=>{
     const r=p.rank_2923;
@@ -401,7 +422,14 @@ function renderTable(){
           <div class="kp-bar"><div class="kp-bar-fill" style="width:${barW}%"></div></div>
         </div>
       </td>
-      <td class="td-right pts-val">${fmt(p.points_difference)}</td>
+      <td class="td-right pts-val">${p.score>0?fmt(p.score):'—'}</td>
+      <td class="td-right goal-val">${p.goal>0?fmt(p.goal):'—'}</td>
+      <td class="td-right">
+        ${p.goal>0&&p.score>0?`<div class="goal-pct-wrap">
+          <span class="goal-pct-label ${p.goal_pct>=100?'pct-met':p.goal_pct>=50?'pct-half':'pct-low'}">${p.goal_pct.toFixed(1)}%</span>
+          <div class="goal-bar"><div class="goal-bar-fill ${p.goal_pct>=100?'pct-met':p.goal_pct>=50?'pct-half':'pct-low'}" style="width:${Math.min(p.goal_pct,100).toFixed(1)}%"></div></div>
+        </div>`:'—'}
+      </td>
       <td class="td-right" style="color:var(--red)">${fmt(p.power_difference)}</td>
       <td class="td-right">${fmt(p.latest_power)}</td>
       <td class="td-right dead-val">${hasKP?fmt(p.dead_diff):'—'}</td>
