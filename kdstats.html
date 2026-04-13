@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KD Stats — Kingdom 2923</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05050f;--bg2:#07071a;--s1:#0c0c22;--s2:#10103a;--s3:#1a1a50;
+  --border:rgba(100,80,220,0.18);--border2:rgba(120,100,255,0.35);
+  --purple:#7c3aed;--purple2:#8b5cf6;--purple3:#a78bfa;
+  --blue:#3b82f6;--blue2:#60a5fa;--cyan:#22d3ee;
+  --accent:#a78bfa;
+  --text:#e2e8f0;--muted:#64748b;--muted2:#94a3b8;
+  --gold:#f59e0b;--green:#10b981;--red:#f87171;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;overflow-x:auto}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;height:64px;
+  background:rgba(5,5,15,0.9);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.4rem;
+  background:linear-gradient(135deg,var(--purple3),var(--blue2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-decoration:none;letter-spacing:-0.5px;
+}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-link{color:var(--muted2);text-decoration:none;font-size:14px;font-weight:500;padding:8px 16px;border-radius:8px;transition:all .2s}
+.nav-link:hover{color:#fff;background:rgba(124,58,237,0.15)}
+.nav-link.active{color:var(--purple3);background:rgba(124,58,237,0.15)}
+.nav-discord{
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  color:#fff;text-decoration:none;font-size:13px;font-weight:700;
+  padding:9px 18px;border-radius:8px;transition:all .2s;
+  box-shadow:0 0 20px rgba(124,58,237,0.3);
+}
+.nav-discord:hover{transform:translateY(-1px);box-shadow:0 4px 24px rgba(124,58,237,0.5)}
+@media(max-width:768px){nav{padding:0 16px}.nav-links .nav-link{display:none}}
+
+/* PAGE HERO */
+.page-hero{
+  padding:100px 24px 48px;text-align:center;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(124,58,237,0.14) 0%,transparent 65%);
+  border-bottom:1px solid var(--border);position:relative;overflow:hidden;
+}
+.page-hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(100,80,220,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(100,80,220,0.03) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 0%,transparent 80%);
+}
+.page-overline{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--purple3);margin-bottom:10px;position:relative}
+.page-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,5vw,3rem);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:8px;position:relative}
+.page-sub{font-size:14px;color:var(--muted2);position:relative;margin-bottom:32px}
+
+/* STAT CARDS */
+.stat-cards{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
+  max-width:900px;margin:0 auto;position:relative;
+}
+.stat-card{
+  background:var(--s1);border:1px solid var(--border);border-radius:14px;
+  padding:16px 22px;text-align:center;min-width:140px;
+}
+.stat-card-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.stat-card-value{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;font-weight:800;color:#fff}
+.stat-card-value.purple{color:var(--purple3)}
+.stat-card-value.gold{color:var(--gold)}
+.stat-card-value.red{color:var(--red)}
+.stat-card-value.green{color:var(--green)}
+.stat-card-value.blue{color:var(--blue2)}
+
+/* MAIN CONTENT */
+.main{max-width:1400px;margin:0 auto;padding:24px 20px 80px}
+
+/* CONTROLS */
+.controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.search-box{
+  position:relative;flex:1;min-width:220px;max-width:340px;
+}
+.search-box input{
+  width:100%;background:var(--s1);border:1px solid var(--border);
+  border-radius:10px;padding:10px 12px 10px 38px;
+  color:#fff;font-size:14px;outline:none;transition:border .2s;font-family:'Inter',sans-serif;
+}
+.search-box input::placeholder{color:var(--muted)}
+.search-box input:focus{border-color:var(--border2)}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.filter-select{
+  background:var(--s1);border:1px solid var(--border);border-radius:10px;
+  padding:10px 14px;color:var(--muted2);font-size:13px;outline:none;
+  cursor:pointer;font-family:'Inter',sans-serif;
+}
+.filter-select:focus{border-color:var(--border2)}
+.results-info{margin-left:auto;font-size:12px;color:var(--muted);white-space:nowrap}
+.results-info span{color:var(--muted2);font-weight:600}
+
+/* TABLE */
+.table-scroll{overflow:visible}
+table{width:100%;border-collapse:collapse;min-width:800px}
+thead{position:sticky;top:64px;z-index:10}
+th{
+  background:var(--s2);padding:10px 10px;text-align:left;
+  font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--muted);white-space:nowrap;cursor:pointer;user-select:none;
+  border-bottom:1px solid var(--border);transition:color .2s;
+}
+th:hover{color:var(--purple3)}
+th.sorted-asc{color:var(--purple3)}th.sorted-asc::after{content:' ▲';font-size:9px}
+th.sorted-desc{color:var(--purple3)}th.sorted-desc::after{content:' ▼';font-size:9px}
+tbody tr{border-bottom:1px solid rgba(30,30,80,0.5);transition:background .15s}
+tbody tr:hover{background:rgba(124,58,237,0.05)}
+tbody tr:last-child{border-bottom:none}
+td{padding:10px 10px;font-size:13px;white-space:nowrap;vertical-align:middle}
+.td-right{text-align:right}
+
+/* AVATAR */
+.gov-avatar-wrap{
+  position:relative;width:36px;height:36px;
+  display:inline-block;vertical-align:middle;flex-shrink:0;
+}
+.gov-avatar-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;border-radius:50%;
+}
+.gov-avatar-frame{
+  position:absolute;top:-8%;left:-8%;
+  width:116%;height:116%;
+  object-fit:contain;pointer-events:none;z-index:2;
+}
+
+/* CELLS */
+.rank-cell{font-weight:700;font-size:13px;color:var(--muted2)}
+.name-cell-wrap{display:flex;align-items:center;gap:10px}
+.name-text{font-weight:600;color:#fff;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.id-cell{color:var(--muted);font-size:11px;font-family:monospace;white-space:nowrap}
+.alliance-tag{
+  font-size:10px;font-weight:700;letter-spacing:1px;
+  padding:2px 7px;border-radius:5px;
+  background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);
+  color:var(--purple3);
+}
+.kp-val{color:var(--purple3);font-weight:700}
+.power-val{color:var(--gold);font-weight:600}
+.t5-val{color:var(--blue2)}
+.t4-val{color:var(--green)}
+.dead-val{color:var(--red)}
+
+/* PAGINATION */
+.pagination{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:24px;flex-wrap:wrap}
+.page-btn{
+  background:var(--s1);border:1px solid var(--border);color:var(--muted2);
+  border-radius:8px;padding:7px 13px;font-size:13px;cursor:pointer;
+  font-family:'Inter',sans-serif;transition:all .2s;
+}
+.page-btn:hover:not(:disabled){border-color:var(--border2);color:#fff}
+.page-btn.active{background:rgba(124,58,237,0.2);border-color:var(--purple);color:var(--purple3);font-weight:700}
+.page-btn:disabled{opacity:0.35;cursor:default}
+.no-results{text-align:center;padding:60px 20px;color:var(--muted)}
+.no-results h3{font-size:1.1rem;margin-bottom:8px;color:var(--muted2)}
+
+footer{
+  border-top:1px solid var(--border);padding:28px 40px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+  font-size:13px;color:var(--muted);
+}
+.footer-logo{font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--purple3)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">KD 2923</a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="stats.html" class="nav-link">Governor Stats</a>
+    <a href="kdstats.html" class="nav-link active">KD Stats</a>
+    <a href="kvk.html" class="nav-link">KvK History</a>
+    <a href="org.html" class="nav-link">Organization</a>
+    <a href="https://discord.gg/94FVuYrJhV" target="_blank" class="nav-discord">Join Discord ↗</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-overline">Kingdom 2923</div>
+  <h1 class="page-title">KD Stats</h1>
+  <p class="page-sub">CH25 governors — live snapshot</p>
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="stat-card-label">CH25 Governors</div>
+      <div class="stat-card-value purple">206</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Combined Power</div>
+      <div class="stat-card-value gold">8.27B</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Combined KP</div>
+      <div class="stat-card-value red">214.8B</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Total T5 Kills</div>
+      <div class="stat-card-value blue">7.98B</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Total T4 Kills</div>
+      <div class="stat-card-value green">5.36B</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Total Dead</div>
+      <div class="stat-card-value">1.44B</div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="controls">
+    <div class="search-box">
+      <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search-input" placeholder="Search name, ID, alliance…" oninput="applyFilters()">
+    </div>
+    <select class="filter-select" id="sort-select" onchange="applySort()">
+      <option value="kp_desc">Kill Points (High→Low)</option>
+      <option value="kp_asc">Kill Points (Low→High)</option>
+      <option value="power_desc">Power (High→Low)</option>
+      <option value="power_asc">Power (Low→High)</option>
+      <option value="t5_desc">T5 Kills (High→Low)</option>
+      <option value="t4_desc">T4 Kills (High→Low)</option>
+      <option value="dead_desc">Dead (High→Low)</option>
+      <option value="name_asc">Name (A→Z)</option>
+    </select>
+    <div class="results-info">Showing <span id="count-shown">—</span> of <span id="count-total">—</span></div>
+  </div>
+
+  <div class="table-scroll">
+    <table>
+      <thead><tr>
+        <th data-col="rank">Rank</th>
+        <th data-col="name">Governor</th>
+        <th data-col="id">ID</th>
+        <th data-col="alliance">Alliance</th>
+        <th data-col="kp" class="td-right">Kill Points</th>
+        <th data-col="power" class="td-right">Power</th>
+        <th data-col="t5" class="td-right">T5 Kills</th>
+        <th data-col="t4" class="td-right">T4 Kills</th>
+        <th data-col="dead" class="td-right">Dead</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+  <div id="pagination" class="pagination"></div>
+</div>
+
+<footer>
+  <div><span class="footer-logo">Kingdom 2923</span> · KD Stats</div>
+  <div>kd2923.com</div>
+  <div><a href="https://discord.gg/94FVuYrJhV" target="_blank" style="color:var(--purple3);text-decoration:none">Discord ↗</a></div>
+</footer>
+
+<script>
+const DATA = [
+{"rank": 1, "name": "Abu x Cuzzz", "id": "64418867", "alliance": "", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/52817932/2025-08-06/C9A55AA79FA12D01ADBED5F781A20672_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_160.png", "power": 73856844, "kp": 17708129362, "t5": 705395559, "t4": 357162642, "dead": 70166301},
+{"rank": 2, "name": "Evеrgreen", "id": "54394720", "alliance": "M23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/44638288/2026-03-03/B33161108105EF112673338C13D0223E_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_16.png", "power": 89878517, "kp": 16303402941, "t5": 611675218, "t4": 394444873, "dead": 34374687},
+{"rank": 3, "name": "NeckSnapper", "id": "12858960", "alliance": "M23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/11663712/2026-01-03/C3A0589B600E8D0C11FF3E2E57E5366F_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_16.png", "power": 118548354, "kp": 14534854586, "t5": 607821655, "t4": 235580987, "dead": 41658038},
+{"rank": 4, "name": "RoTu7", "id": "126173104", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head_festive_1021.png", "frame": "", "power": 102655395, "kp": 11175072933, "t5": 458093775, "t4": 198235309, "dead": 23197479},
+{"rank": 5, "name": "XxXBUSHXxX", "id": "111428039", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head_festive_1016.png", "frame": "", "power": 122490792, "kp": 8515421102, "t5": 364864533, "t4": 120590103, "dead": 37714178},
+{"rank": 6, "name": "Dreno", "id": "2604440", "alliance": "M23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/2451518/2025-10-26/E2BEDD4B35D17E0BB683AC1269506CCA_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_7.png", "power": 81701178, "kp": 7827359930, "t5": 320898985, "t4": 138902116, "dead": 31529446},
+{"rank": 7, "name": "WhaleGhostメ", "id": "3720743", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 102854965, "kp": 7725018064, "t5": 259017270, "t4": 245210375, "dead": 33843058},
+{"rank": 8, "name": "Welfare 2010", "id": "22251330", "alliance": "M23V", "avatar": "https://imimg.lilithcdn.com/roc/llc_avatar/22251330/22/12/09/1c16c0d3c8ba9239_600x600.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_5.png", "power": 121046297, "kp": 6901546782, "t5": 242653943, "t4": 201950319, "dead": 28718592},
+{"rank": 9, "name": "ｷStitouilleｷ", "id": "79507632", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 95323090, "kp": 6663972137, "t5": 276285705, "t4": 111317743, "dead": 28427058},
+{"rank": 10, "name": "HeftyMaxx", "id": "33464730", "alliance": "M23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/28485270/2025-11-02/E768743F3DB38AE587EBA35ABF3B86F9_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_62.png", "power": 111528156, "kp": 6411318889, "t5": 270546061, "t4": 99055973, "dead": 31408863},
+{"rank": 11, "name": "SlappyPenguin", "id": "38139593", "alliance": "M23V", "avatar": "https://imv2-gl.lilithgame.com/p/10043/0/38139593/230414/FDF1BAFBE55092C9CA98F4592CA06ABA_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_26.png", "power": 121150749, "kp": 6305304095, "t5": 236283949, "t4": 156475289, "dead": 26045856},
+{"rank": 12, "name": "Kodama ツ", "id": "149102043", "alliance": "M23V", "avatar": "https://plat-fau-global.lilithgame.com/p/IM/10043/0/207233282/2024-08-10/DA45156E36328754129F0849662D223C_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_235.png", "power": 103683038, "kp": 6043854206, "t5": 226661075, "t4": 145203644, "dead": 17497741},
+{"rank": 13, "name": "Shin 乄 Slappy", "id": "48865687", "alliance": "M23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/216078798/2025-07-26/E735160D64FB9C9E47F7E2BF33188859_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_148.png", "power": 89686751, "kp": 6011409594, "t5": 199847433, "t4": 196166715, "dead": 23719304},
+{"rank": 14, "name": "JovyPewPew", "id": "49498745", "alliance": "N23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/41153911/2025-05-23/CDA05957B582455780F9E98AD789F795_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_239.png", "power": 80586231, "kp": 5587493794, "t5": 174247085, "t4": 202230574, "dead": 32283232},
+{"rank": 15, "name": "Pinouille", "id": "18422664", "alliance": "M23V", "avatar": "https://imimg.lilithcdn.com/roc/llc_avatar/18422664/23/07/07/77934dbcf76fbbde_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_223.png", "power": 120729439, "kp": 5571270447, "t5": 160165554, "t4": 230282233, "dead": 43621304},
+{"rank": 16, "name": "ˢʷᵉfckup", "id": "110384519", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head21.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_105.png", "power": 109394052, "kp": 5532058949, "t5": 226563833, "t4": 97604078, "dead": 25229969},
+{"rank": 17, "name": "ᵈᵃᵈAustin", "id": "52976204", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head_festive_1021.png", "frame": "", "power": 82964619, "kp": 5214557205, "t5": 173610646, "t4": 162690032, "dead": 30592042},
+{"rank": 18, "name": "SメGHØST", "id": "74428744", "alliance": "N23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/52016856/2025-09-23/8914F9C8C56307EEAACBCDA4384E8480_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_207.png", "power": 70112843, "kp": 5046357236, "t5": 163544637, "t4": 173716925, "dead": 24818844},
+{"rank": 19, "name": "Ravens Sniff", "id": "139348484", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 86875399, "kp": 4593786980, "t5": 182810597, "t4": 91715132, "dead": 12882865},
+{"rank": 20, "name": "ᴳᴰ BlackT", "id": "138910935", "alliance": "M23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/201278434/2025-04-14/DB0DCC90F1A274CCEC23D5477B2EF893_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_171.png", "power": 94451947, "kp": 4474402490, "t5": 176926109, "t4": 90653901, "dead": 12535812},
+{"rank": 21, "name": "MarcY", "id": "82041940", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 101915537, "kp": 4408805981, "t5": 138076124, "t4": 159276125, "dead": 27679267},
+{"rank": 22, "name": "Mss snake", "id": "63134365", "alliance": "N23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/51790251/2025-10-01/BC6BCFC58EB898B2A7C04B72C7290CE7_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_68.png", "power": 86884620, "kp": 4267840739, "t5": 158112991, "t4": 105668870, "dead": 32318243},
+{"rank": 23, "name": "ᴳᵂTartarus", "id": "138287824", "alliance": "M23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/2545668/2025-05-25/6DF8E820BDB0C7468E1A8161A835270A_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_12.png", "power": 93377633, "kp": 3890224941, "t5": 149154624, "t4": 86803606, "dead": 19108285},
+{"rank": 24, "name": "义WilliMont义", "id": "133270088", "alliance": "M23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/64079851/2026-03-14/2161777993B2428A34E1A75B04E9754C_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_194.png", "power": 90721828, "kp": 3309668295, "t5": 135335601, "t4": 59186808, "dead": 14778674},
+{"rank": 25, "name": "DolphinGhostメ", "id": "8841600", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 90358195, "kp": 3272833858, "t5": 101916734, "t4": 112813750, "dead": 17785980},
+{"rank": 26, "name": "StrikerBek", "id": "149420463", "alliance": "M23V", "avatar": "https://imimg.lilithcdn.com/llc_avatar/149420463/23/01/30/d3bd7b3838839c1e_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_26.png", "power": 94952716, "kp": 2903433795, "t5": 118002172, "t4": 51288556, "dead": 9350115},
+{"rank": 27, "name": "EvergreenFiller", "id": "5146080", "alliance": "M23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/4838250/2026-04-03/E5EF3C4E2A96B1E857F92DD28A82F8BB_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_62.png", "power": 71513277, "kp": 2114282452, "t5": 70002987, "t4": 69512531, "dead": 24514309},
+{"rank": 28, "name": "Chewba", "id": "106324227", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 106441410, "kp": 2111699177, "t5": 73587323, "t4": 62917418, "dead": 15548071},
+{"rank": 29, "name": "ᴥTeya ᴥ", "id": "138837340", "alliance": "M23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/201246223/2026-04-04/6F0C153E3947CAC69BDC90511AB78F84_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_239.png", "power": 86251693, "kp": 2030015105, "t5": 79735761, "t4": 42573449, "dead": 13827001},
+{"rank": 30, "name": "ᴺᴰRémi", "id": "148215768", "alliance": "M23V", "avatar": "https://imimg.lilithcdn.com/llc_avatar/148215768/23/02/15/7ff872ecd3b02d11_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_233.png", "power": 83527390, "kp": 1973339362, "t5": 71993048, "t4": 50738147, "dead": 19852594},
+{"rank": 31, "name": "D1N0 the Filler", "id": "131167998", "alliance": "", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/103775106/2025-07-02/8DFF5BD232E70EE7EFE4DFF6F02A831D_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_178.png", "power": 64008854, "kp": 1964556788, "t5": 65335505, "t4": 64402568, "dead": 11924403},
+{"rank": 32, "name": "VegetaSs", "id": "8587765", "alliance": "M23V", "avatar": "https://imv2-gl.lilithgame.com/p/10043/0/8587765/231008/240057267B382E0DE52AECA5DC34333B_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_26.png", "power": 74209443, "kp": 1875632645, "t5": 61339333, "t4": 63746918, "dead": 20911138},
+{"rank": 33, "name": "23ミGhettoSmurf", "id": "135382285", "alliance": "N23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/106360824/2025-08-03/D45755D3BEE4204DCDDC1E8841D9995F_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_138.png", "power": 88794223, "kp": 1685384381, "t5": 60629497, "t4": 45337424, "dead": 12623376},
+{"rank": 34, "name": "Zeexceed", "id": "145053773", "alliance": "M23V", "avatar": "https://imv2-gl.lilithgame.com/p/10043/0/145053773/230621/1346DD86C14D49884EF99012F4B39759_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_26.png", "power": 104653531, "kp": 1616724282, "t5": 59079228, "t4": 43125314, "dead": 14243636},
+{"rank": 35, "name": "xTheMechanic", "id": "148829730", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 93824203, "kp": 1523540616, "t5": 46398447, "t4": 57703771, "dead": 13758287},
+{"rank": 36, "name": "Flexitweg", "id": "138838302", "alliance": "M23V", "avatar": "https://imv2-gl.lilithgame.com/p/10043/0/138838302/230319/A933FEADE9BBB3E16D921270EFCAD69E_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_144.png", "power": 71259778, "kp": 1322708785, "t5": 54134022, "t4": 23581279, "dead": 11612622},
+{"rank": 37, "name": "CitySwarmPolice", "id": "41055183", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 79659213, "kp": 1260211349, "t5": 28053098, "t4": 67817423, "dead": 12676138},
+{"rank": 38, "name": "Borborigmos", "id": "167356152", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 92929155, "kp": 1251012034, "t5": 41507710, "t4": 40946684, "dead": 19719824},
+{"rank": 39, "name": "itsASH", "id": "168648842", "alliance": "M23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/4552426/2025-06-02/AD33DFEB6F462AF72612A1CE4FF42450_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_4.png", "power": 65408845, "kp": 1194297013, "t5": 37784263, "t4": 43280381, "dead": 9194653},
+{"rank": 40, "name": "DoctorxSeven", "id": "8578552", "alliance": "M23V", "avatar": "https://plat-fau-global.lilithgame.com/p/IM/10043/0/5991431/2024-12-11/57ADBEBE8192BD0D40BADDF9C9E9349E_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_26.png", "power": 73798671, "kp": 967233911, "t5": 39508456, "t4": 17676670, "dead": 9198575},
+{"rank": 41, "name": "UA SET", "id": "120564711", "alliance": "M23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/97449949/2025-10-05/8D1C0EC56E1BC4BF87F766F3DF551492_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_2.png", "power": 75879938, "kp": 953599317, "t5": 39255228, "t4": 16512910, "dead": 12291643},
+{"rank": 42, "name": "ᴳᴰAffanXxX", "id": "107280388", "alliance": "N23V", "avatar": "https://imv2-gl.lilithgame.com/p/roc/avatar/107280388/24/04/15/6d1c3cf4b524c5bc_445x445.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_73.png", "power": 82417428, "kp": 893497736, "t5": 22956097, "t4": 40782272, "dead": 9304080},
+{"rank": 43, "name": "Mariuszy", "id": "170667747", "alliance": "M23V", "avatar": "https://static-gl.lilithgame.com/p/IM/10043/0/219701050/2024-05-28/B27799372E5E07E9272C59D7AF864D0D_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_1.png", "power": 72069017, "kp": 795327585, "t5": 31762375, "t4": 15438049, "dead": 3739285},
+{"rank": 44, "name": "Salty Endings", "id": "100844051", "alliance": "M23V", "avatar": "https://static-gl.lilithgame.com/p/IM/10043/0/78810290/2024-06-08/EBFAF37D20D2BB6910A275E5BF551AD2_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_3.png", "power": 67389591, "kp": 701445195, "t5": 18673665, "t4": 30034534, "dead": 13841771},
+{"rank": 45, "name": "Arman781 F3", "id": "138467933", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 55677939, "kp": 612708350, "t5": 25010143, "t4": 10906191, "dead": 17380698},
+{"rank": 46, "name": "darthLionus", "id": "133553334", "alliance": "Li0n", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 98079257, "kp": 611204866, "t5": 23930556, "t4": 13106452, "dead": 7627403},
+{"rank": 47, "name": "Evergreen Alt", "id": "121362344", "alliance": "23BD", "avatar": "https://imv2-gl.lilithgame.com/p/10043/0/121362344/240213/AAE1F4475A00AE956C882FC3308D8776_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_149.png", "power": 51489281, "kp": 472036722, "t5": 6279269, "t4": 31390869, "dead": 4907394},
+{"rank": 48, "name": "Dal pi", "id": "138450084", "alliance": "", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 57984908, "kp": 405875894, "t5": 15081982, "t4": 10082090, "dead": 16430088},
+{"rank": 49, "name": "BlackT F", "id": "140450232", "alliance": "M23V", "avatar": "https://plat-fau-global.lilithgame.com/p/IM/10043/0/201278434/2024-11-23/610B6153A5625CB86A45A5E461D8B6CF_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_227.png", "power": 45954366, "kp": 375909947, "t5": 14216797, "t4": 8964824, "dead": 8304465},
+{"rank": 50, "name": "Stæch", "id": "84062886", "alliance": "23Ba", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/68281880/2025-12-17/ACFFF098F795D5F846E266865609D4DD_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_56.png", "power": 64114170, "kp": 307521732, "t5": 5187055, "t4": 17441351, "dead": 12145879},
+{"rank": 51, "name": "Marcy farm", "id": "151342496", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 69551816, "kp": 282686346, "t5": 10150054, "t4": 7915136, "dead": 10623977},
+{"rank": 52, "name": "CAPTAIN OBAKE", "id": "138062276", "alliance": "", "avatar": "https://imv2-gl.lilithgame.com/p/roc/avatar/138062276/24/03/18/b8279108ed671b1c_350x350.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_43.png", "power": 53446446, "kp": 251674610, "t5": 9155551, "t4": 6648515, "dead": 6147509},
+{"rank": 53, "name": "Overl0rdFarm", "id": "12679496", "alliance": "KL##", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head13.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_35.png", "power": 57272963, "kp": 247090218, "t5": 1884773, "t4": 13801545, "dead": 11504443},
+{"rank": 54, "name": "ᴰᵍerme", "id": "126221731", "alliance": "", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head22.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_2.png", "power": 51445077, "kp": 235904096, "t5": 7265147, "t4": 8712750, "dead": 5113947},
+{"rank": 55, "name": "Zeexceed 2", "id": "152718714", "alliance": "M23V", "avatar": "https://imv2-gl.lilithgame.com/p/10043/0/152718714/231201/5451862202C1DCDA7B8CE14910FBFC6B_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_73.png", "power": 50873946, "kp": 235443310, "t5": 6646589, "t4": 10105454, "dead": 7183478},
+{"rank": 56, "name": "乂TigerXXV", "id": "134008771", "alliance": "Spas", "avatar": "https://imv2-gl.lilithgame.com/p/10043/0/134008771/230410/0D8813D13E750DB43DA3260C390F44DC_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_12.png", "power": 35940778, "kp": 227006611, "t5": 2778919, "t4": 16282290, "dead": 1698512},
+{"rank": 57, "name": "crait", "id": "12685867", "alliance": "Mix3", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head17.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_131.png", "power": 57983223, "kp": 217777745, "t5": 7888575, "t4": 5878111, "dead": 21508812},
+{"rank": 58, "name": "乇ﾒMondilu", "id": "138117605", "alliance": "", "avatar": "https://imimg.lilithcdn.com/llc_avatar/138117605/23/01/09/944325931aefd2cb_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_1.png", "power": 45872781, "kp": 202647490, "t5": 5403017, "t4": 8355272, "dead": 7181252},
+{"rank": 59, "name": "Evergrееn F8", "id": "126717833", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 26954032, "kp": 196600913, "t5": 6909116, "t4": 5755929, "dead": 10699743},
+{"rank": 60, "name": "23ミTartarus", "id": "101524307", "alliance": "", "avatar": "https://imimg.lilithcdn.com/roc/llc_avatar/101524307/22/07/16/860e2283e7dce1d4_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_139.png", "power": 35906362, "kp": 186380625, "t5": 3303790, "t4": 11457513, "dead": 8598326},
+{"rank": 61, "name": "Nickolas24", "id": "36877296", "alliance": "MDWz", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head08.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_34.png", "power": 52666848, "kp": 175149278, "t5": 731371, "t4": 15756705, "dead": 7506676},
+{"rank": 62, "name": "Ravens Sniff F2", "id": "138633260", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 33266613, "kp": 170471318, "t5": 4549824, "t4": 7524299, "dead": 6733751},
+{"rank": 63, "name": "ghandiwa", "id": "138488238", "alliance": "M23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/201119029/2025-01-14/BA7D8F20A62E1859245914FEB92FA131_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_46.png", "power": 64386097, "kp": 167102295, "t5": 5633520, "t4": 5327496, "dead": 11340844},
+{"rank": 64, "name": "fckupfarm5", "id": "157831377", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 37011961, "kp": 166456622, "t5": 3854516, "t4": 8416882, "dead": 6541204},
+{"rank": 65, "name": "Tom DawR", "id": "135325224", "alliance": "N23V", "avatar": "https://plat-fau-global.lilithgame.com/p/IM/10043/0/106328202/2024-11-10/298AB9B26E3D29BB7FF509C97180291F_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_165.png", "power": 50772902, "kp": 164759971, "t5": 1865406, "t4": 12236079, "dead": 1645178},
+{"rank": 66, "name": "Evergreеn F10", "id": "121932456", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 29098967, "kp": 150770387, "t5": 4517950, "t4": 5955403, "dead": 7443108},
+{"rank": 67, "name": "ᴳᴰ SODI", "id": "138930720", "alliance": "M23V", "avatar": "https://imimg.lilithcdn.com/roc/llc_avatar/138930720/23/07/10/45574b66d3bc6a1b_338x338.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_46.png", "power": 38340653, "kp": 140996437, "t5": 2793565, "t4": 8121113, "dead": 4111266},
+{"rank": 68, "name": "GhostfArm", "id": "59019332", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 31261925, "kp": 116084007, "t5": 3811471, "t4": 3688819, "dead": 6706618},
+{"rank": 69, "name": "moustaf少Tiger", "id": "24006569", "alliance": "", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/21694269/2025-04-03/E834055FBB5D5624582FE1B96627C8B4_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_74.png", "power": 53088102, "kp": 114526367, "t5": 4183986, "t4": 3033354, "dead": 13210045},
+{"rank": 70, "name": "crișor", "id": "24779017", "alliance": "Mix3", "avatar": "https://imv2-gl.lilithgame.com/p/roc/avatar/24779017/24/02/17/47bc6915c93a47e2_799x799.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_131.png", "power": 57768010, "kp": 112739824, "t5": 4176835, "t4": 2876560, "dead": 21056483},
+{"rank": 71, "name": "Evergrеen F9", "id": "135504221", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 20148143, "kp": 111500898, "t5": 3935258, "t4": 3265576, "dead": 7879632},
+{"rank": 72, "name": "RoTuS F1", "id": "136767268", "alliance": "M23V", "avatar": "https://imimg.lilithcdn.com/llc_avatar/136767268/23/08/30/b2d4d92be4d1b6df_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_227.png", "power": 46528801, "kp": 99186091, "t5": 4170045, "t4": 1484820, "dead": 11477170},
+{"rank": 73, "name": "HeftyDan F", "id": "58956179", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head06.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_52.png", "power": 32541608, "kp": 94074268, "t5": 2779552, "t4": 3716811, "dead": 7865362},
+{"rank": 74, "name": "Bek farm 7272", "id": "150779069", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 23544283, "kp": 92691773, "t5": 3356634, "t4": 2449650, "dead": 5620245},
+{"rank": 75, "name": "BENTLEŸ", "id": "137811581", "alliance": "", "avatar": "https://imv2-gl.lilithgame.com/p/10043/0/137811581/221127/D84A191AA5425BBD9B625A3E6DB2DF8E_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_129.png", "power": 31953750, "kp": 82997725, "t5": 362860, "t4": 6472103, "dead": 1170109},
+{"rank": 76, "name": "ᴿᴳLion", "id": "137836975", "alliance": "23BD", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 33536092, "kp": 72338604, "t5": 2139142, "t4": 2875474, "dead": 5062540},
+{"rank": 77, "name": "彡TartarusF01", "id": "140542654", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head06.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_165.png", "power": 45699297, "kp": 69213146, "t5": 2509727, "t4": 1815002, "dead": 5885170},
+{"rank": 78, "name": "彡TartarusF00", "id": "141745643", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head_festive_1020.png", "frame": "", "power": 46406501, "kp": 68827875, "t5": 2329575, "t4": 2212650, "dead": 4589952},
+{"rank": 79, "name": "TempestaNR", "id": "134668297", "alliance": "N23V", "avatar": "https://imimg.lilithcdn.com/llc_avatar/134668297/23/03/04/70851980b4a7d008_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_61.png", "power": 35820998, "kp": 66074886, "t5": 183518, "t4": 2261637, "dead": 2320106},
+{"rank": 80, "name": "Gorkhali HkRaI", "id": "100534495", "alliance": "", "avatar": "https://imimg.lilithcdn.com/llc_avatar/100534495/21/08/24/02abcf3d161d2d93_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_3.png", "power": 42477102, "kp": 61547601, "t5": 938249, "t4": 3742411, "dead": 5129212},
+{"rank": 81, "name": "NathanW", "id": "48479207", "alliance": "CG23", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 35345635, "kp": 58687071, "t5": 1037814, "t4": 3465286, "dead": 5953542},
+{"rank": 82, "name": "K2dama", "id": "152040671", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 22657946, "kp": 50452175, "t5": 1507891, "t4": 1987133, "dead": 3019389},
+{"rank": 83, "name": "CaptainPoop", "id": "136745677", "alliance": "", "avatar": "https://imv2-gl.lilithgame.com/p/10043/0/136745677/221028/57D72CA0FAB0D8FACF6F6A416EA0F11C_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_138.png", "power": 24010197, "kp": 45401709, "t5": 530990, "t4": 3153744, "dead": 808094},
+{"rank": 84, "name": "Darklops F", "id": "79478464", "alliance": "N23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/64690159/2025-10-02/B2B4876C8DADC70535FB6E8443D13FB2_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_165.png", "power": 23577593, "kp": 41086230, "t5": 1023502, "t4": 2032253, "dead": 3587600},
+{"rank": 85, "name": "SET 3 F", "id": "147653515", "alliance": "M23V", "avatar": "https://imv2-gl.lilithgame.com/p/roc/avatar/147653515/23/12/21/ec2b214bbee9d713_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_28.png", "power": 28759480, "kp": 39904520, "t5": 695186, "t4": 2263182, "dead": 3597238},
+{"rank": 86, "name": "RémiFarm1", "id": "147789636", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 27863508, "kp": 39816798, "t5": 1438098, "t4": 1096111, "dead": 3273314},
+{"rank": 87, "name": "RémiFarm2", "id": "152897555", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 24344554, "kp": 34645552, "t5": 1243708, "t4": 973641, "dead": 2737375},
+{"rank": 88, "name": "Ezii01", "id": "137913597", "alliance": "", "avatar": "https://imimg.lilithcdn.com/roc/llc_avatar/137913597/22/09/17/2b0bac6df449344f_504x504.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_4.png", "power": 29557742, "kp": 32304567, "t5": 267022, "t4": 2664421, "dead": 83132},
+{"rank": 89, "name": "DagQag", "id": "138522692", "alliance": "N23V", "avatar": "https://imimg.lilithcdn.com/llc_avatar/138522692/23/09/28/7cf9baf781343d4b_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_4.png", "power": 31378772, "kp": 32016727, "t5": 123623, "t4": 2447994, "dead": 1800095},
+{"rank": 90, "name": "Bek7272", "id": "149196306", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 23037291, "kp": 31855793, "t5": 1120095, "t4": 897072, "dead": 2285751},
+{"rank": 91, "name": "FarmerXSeven", "id": "74226377", "alliance": "N23V", "avatar": "https://imv2-gl.lilithgame.com/p/10043/0/74226377/231103/B15F9FDCBCB2942D4C2FDA0271D7D8DD_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 23101564, "kp": 29479975, "t5": 1120827, "t4": 633176, "dead": 2801593},
+{"rank": 92, "name": "Evergreеn F23", "id": "46973697", "alliance": "R23G", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/39156329/2025-01-19/27CECA2A89B037F15CE185B02DE3CB28_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 30581387, "kp": 28890379, "t5": 429394, "t4": 1639534, "dead": 2401077},
+{"rank": 93, "name": "HeftyLid F", "id": "31739639", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 27370966, "kp": 26781543, "t5": 773719, "t4": 1104416, "dead": 1896372},
+{"rank": 94, "name": "BananenJ02", "id": "91306097", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head21.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_46.png", "power": 40454472, "kp": 26206984, "t5": 427633, "t4": 1138079, "dead": 4309044},
+{"rank": 95, "name": "Reut", "id": "138512985", "alliance": "Spas", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head10.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_152.png", "power": 43249573, "kp": 25912812, "t5": 514087, "t4": 1239838, "dead": 9535782},
+{"rank": 96, "name": "Blacktzar45", "id": "144703691", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head22.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_222.png", "power": 34613195, "kp": 23969589, "t5": 966047, "t4": 447031, "dead": 886430},
+{"rank": 97, "name": "BabyNeck", "id": "16046561", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 32531271, "kp": 22763409, "t5": 985273, "t4": 288744, "dead": 3326959},
+{"rank": 98, "name": "DrorCloudlegs", "id": "138468641", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 54003088, "kp": 22375717, "t5": 995718, "t4": 235282, "dead": 8131462},
+{"rank": 99, "name": "Lỗ Đ Thâm", "id": "138444830", "alliance": "JaV4", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head01.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_4.png", "power": 48910140, "kp": 21875938, "t5": 258859, "t4": 921470, "dead": 3680738},
+{"rank": 100, "name": "blahh", "id": "74647247", "alliance": "", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head07.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_73.png", "power": 26230307, "kp": 18619637, "t5": 227450, "t4": 1203083, "dead": 1663566},
+{"rank": 101, "name": "Evergreen F20", "id": "50350526", "alliance": "R23G", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/39156329/2025-08-03/6397CEE373DA358CC4B8013934AB4217_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 22244546, "kp": 17941505, "t5": 72798, "t4": 1176943, "dead": 3050716},
+{"rank": 102, "name": "Evergreen F15", "id": "145354258", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 17736645, "kp": 17119007, "t5": 662400, "t4": 386910, "dead": 1065160},
+{"rank": 103, "name": "SET 4 F", "id": "192949330", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 20577468, "kp": 15872078, "t5": 192397, "t4": 814004, "dead": 1801129},
+{"rank": 104, "name": "peppeita", "id": "138411465", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 28968872, "kp": 15650080, "t5": 289533, "t4": 797338, "dead": 3151614},
+{"rank": 105, "name": "Evergreen F11", "id": "126662753", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 17622320, "kp": 15435529, "t5": 553706, "t4": 348337, "dead": 1688355},
+{"rank": 106, "name": "PinouFarm", "id": "146184106", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head01.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_140.png", "power": 25589940, "kp": 15206967, "t5": 539062, "t4": 397592, "dead": 3182651},
+{"rank": 107, "name": "Bek Farm 3", "id": "58282891", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 21336965, "kp": 15034667, "t5": 431187, "t4": 425319, "dead": 1349309},
+{"rank": 108, "name": "WilliMontFarmx", "id": "92425159", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 27484566, "kp": 14848379, "t5": 371317, "t4": 548191, "dead": 1807903},
+{"rank": 109, "name": "themoose", "id": "138465079", "alliance": "dcio", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head22.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_152.png", "power": 24703580, "kp": 13443106, "t5": 123082, "t4": 965912, "dead": 7760314},
+{"rank": 110, "name": "Rayleigh D Og", "id": "135660197", "alliance": "", "avatar": "https://imimg.lilithcdn.com/roc/llc_avatar/135660197/22/07/31/8f3b53ddb32e31f6_750x750.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_140.png", "power": 22702837, "kp": 12921765, "t5": 107052, "t4": 852084, "dead": 267116},
+{"rank": 111, "name": "ʷᵖMcFirst", "id": "137742249", "alliance": "", "avatar": "https://imimg.lilithcdn.com/llc_avatar/137742249/22/11/23/6e4ee48751199797_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_1.png", "power": 16863242, "kp": 12853379, "t5": 65313, "t4": 1006314, "dead": 1554625},
+{"rank": 112, "name": "Sora JR B5", "id": "79392304", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/79392304/23/12/21/d8972d6b039ef809_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_174.png", "power": 19200245, "kp": 12607376, "t5": 1255054, "t4": 10558, "dead": 731731},
+{"rank": 113, "name": "Birdofpray", "id": "138417982", "alliance": "23Mb", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 52096164, "kp": 11830215, "t5": 328218, "t4": 463606, "dead": 6481743},
+{"rank": 114, "name": "StitFarm 1 CH25", "id": "84724612", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 28152633, "kp": 11719597, "t5": 465926, "t4": 227386, "dead": 1050640},
+{"rank": 115, "name": "K3dama", "id": "153443238", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 18274173, "kp": 11568328, "t5": 426239, "t4": 303827, "dead": 992711},
+{"rank": 116, "name": "TomLoi16", "id": "45402101", "alliance": "R23G", "avatar": "https://plat-fau-global.lilithgame.com/p/IM/10043/0/22095488/2024-08-11/0DFB0C57982B882DC410851D6F982DE1_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 19907620, "kp": 11365037, "t5": 48314, "t4": 562117, "dead": 1068516},
+{"rank": 117, "name": "King IDM", "id": "66348826", "alliance": "N23V", "avatar": "https://imimg.lilithcdn.com/roc/llc_avatar/66348826/20/11/06/2f5421f04a83bbb8_640x640.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_58.png", "power": 29684675, "kp": 11353612, "t5": 305277, "t4": 475100, "dead": 3951093},
+{"rank": 118, "name": "Welfare Farm", "id": "25330576", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head15.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_3.png", "power": 40341241, "kp": 11261353, "t5": 379121, "t4": 347297, "dead": 3812057},
+{"rank": 119, "name": "Clarkslayer", "id": "138434394", "alliance": "C23M", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head09.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_152.png", "power": 31944055, "kp": 10599572, "t5": 69059, "t4": 376610, "dead": 3406437},
+{"rank": 120, "name": "GhostFarmm", "id": "142624548", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 20743630, "kp": 10274575, "t5": 325915, "t4": 364228, "dead": 1748411},
+{"rank": 121, "name": "mwiag", "id": "30544964", "alliance": "KL##", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 30319881, "kp": 8989945, "t5": 287700, "t4": 282174, "dead": 4133665},
+{"rank": 122, "name": "RémiFarm3", "id": "169519450", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 22634503, "kp": 8683022, "t5": 329525, "t4": 208972, "dead": 433379},
+{"rank": 123, "name": "MikeS", "id": "166503821", "alliance": "CG23", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 21262491, "kp": 8540393, "t5": 272934, "t4": 300278, "dead": 2407799},
+{"rank": 124, "name": "Sora JR B2", "id": "81943793", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/81943793/23/12/21/f5dd9ebade19e9dc_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_74.png", "power": 19963033, "kp": 7588627, "t5": 633218, "t4": 241508, "dead": 945858},
+{"rank": 125, "name": "Duoc Ngo", "id": "138433052", "alliance": "HOP#", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head21.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_227.png", "power": 29046827, "kp": 6899049, "t5": 81964, "t4": 175870, "dead": 2215666},
+{"rank": 126, "name": "LilMechanic", "id": "155290181", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 12395047, "kp": 5487488, "t5": 207239, "t4": 133843, "dead": 358034},
+{"rank": 127, "name": "Teya farm", "id": "151237950", "alliance": "N23V", "avatar": "https://imimg.lilithcdn.com/llc_avatar/151237950/23/07/17/29d26e6251fa780f_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 21044391, "kp": 4905484, "t5": 135463, "t4": 219605, "dead": 380883},
+{"rank": 128, "name": "Evergreen F13", "id": "133849666", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 14056936, "kp": 4828095, "t5": 212225, "t4": 55723, "dead": 218916},
+{"rank": 129, "name": "ᵗᶠStefano73", "id": "137518909", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 23693055, "kp": 3531514, "t5": 69829, "t4": 143317, "dead": 1333888},
+{"rank": 130, "name": "neckslapper5000", "id": "99145471", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 14828093, "kp": 3086734, "t5": 84121, "t4": 126615, "dead": 511679},
+{"rank": 131, "name": "Sora JR B6", "id": "79322599", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/79322599/23/12/21/5fd0ec1544a25cd1_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_174.png", "power": 19267739, "kp": 3085302, "t5": 24990, "t4": 213434, "dead": 1217052},
+{"rank": 132, "name": "StitFarm 2 CH25", "id": "92658623", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 22072652, "kp": 3073485, "t5": 134125, "t4": 37124, "dead": 725231},
+{"rank": 133, "name": "Sora JR B7", "id": "79330005", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/79330005/23/12/21/bc64a75955e98018_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_174.png", "power": 17376888, "kp": 2937486, "t5": 6795, "t4": 256955, "dead": 1252727},
+{"rank": 134, "name": "BlackPSG", "id": "150687107", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head06.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 23171519, "kp": 2831366, "t5": 133795, "t4": 15052, "dead": 844617},
+{"rank": 135, "name": "Evergreen F22", "id": "56887744", "alliance": "R23G", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/39156329/2025-08-03/6397CEE373DA358CC4B8013934AB4217_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 17208216, "kp": 2801272, "t5": 104562, "t4": 51413, "dead": 249747},
+{"rank": 136, "name": "Zarządca138416814", "id": "138416814", "alliance": "23BD", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head02.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_152.png", "power": 26796141, "kp": 2664303, "t5": 67, "t4": 71208, "dead": 593944},
+{"rank": 137, "name": "Evergreen F21", "id": "54847592", "alliance": "R23G", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/39156329/2025-08-03/6397CEE373DA358CC4B8013934AB4217_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 18147381, "kp": 2525968, "t5": 64955, "t4": 102314, "dead": 2221806},
+{"rank": 138, "name": "arashii", "id": "123733919", "alliance": "Qad", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 13541482, "kp": 2195295, "t5": 36224, "t4": 35466, "dead": 716722},
+{"rank": 139, "name": "Sora JR B8", "id": "79236970", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/79236970/23/12/21/995229dc547e109a_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_174.png", "power": 16703289, "kp": 2128240, "t5": 4493, "t4": 159954, "dead": 711648},
+{"rank": 140, "name": "hoanglong", "id": "138440449", "alliance": "C23M", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head15.png", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 15844446, "kp": 1971074, "t5": 12304, "t4": 1970, "dead": 498969},
+{"rank": 141, "name": "Tom x mars D5", "id": "84785799", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 21154825, "kp": 1688253, "t5": 28, "t4": 154710, "dead": 0},
+{"rank": 142, "name": "TomLoi19", "id": "141848222", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 13835719, "kp": 1687686, "t5": 2389, "t4": 1344, "dead": 892143},
+{"rank": 143, "name": "Правитель138539529", "id": "138539529", "alliance": "", "avatar": "https://imimg.lilithcdn.com/llc_avatar/138539529/22/12/14/21cb190c3ed26171_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_1.png", "power": 17616743, "kp": 1526561, "t5": 95266, "t4": 91159, "dead": 234516},
+{"rank": 144, "name": "GoldXSeven", "id": "6422640", "alliance": "N23V", "avatar": "https://imimg.lilithcdn.com/roc/llc_avatar/6422640/18/11/10/1b41701e7db85c6f_200x200.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_140.png", "power": 20889842, "kp": 1464114, "t5": 56319, "t4": 33509, "dead": 243063},
+{"rank": 145, "name": "KIRITO sensei", "id": "97471234", "alliance": "N23V", "avatar": "https://imimg.lilithcdn.com/roc/llc_avatar/97471234/21/07/27/576699c09233905b_600x600.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_46.png", "power": 24215767, "kp": 1406391, "t5": 10947, "t4": 91298, "dead": 833338},
+{"rank": 146, "name": "TomLoi2", "id": "30420502", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/roc/llc_avatar/30420502/23/08/24/1a285d20c8f569ee_648x648.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 22635547, "kp": 1294034, "t5": 5421, "t4": 118038, "dead": 32},
+{"rank": 147, "name": "Sora JR B4", "id": "80333611", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/80333611/23/12/21/f7e5f8f8644b5898_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_174.png", "power": 14282248, "kp": 1283741, "t5": 9067, "t4": 93596, "dead": 474489},
+{"rank": 148, "name": "Tom x mars D3", "id": "55374708", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 12335576, "kp": 1258820, "t5": 1331, "t4": 123220, "dead": 914682},
+{"rank": 149, "name": "StitFarm 3 CH25", "id": "82040475", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_player_head_festive_1021.png", "frame": "", "power": 22065851, "kp": 1219786, "t5": 49475, "t4": 22222, "dead": 1220015},
+{"rank": 150, "name": "Sora JR B3", "id": "91826572", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/91826572/23/12/21/7fae6b7dc8c9d7c2_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_174.png", "power": 12466674, "kp": 1167061, "t5": 73448, "t4": 40667, "dead": 365184},
+{"rank": 151, "name": "Borborigmos Frm", "id": "175375118", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 21551595, "kp": 1086699, "t5": 23535, "t4": 49954, "dead": 1776877},
+{"rank": 152, "name": "khalifa 4f", "id": "130633826", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 11448553, "kp": 1014028, "t5": 29759, "t4": 41846, "dead": 766078},
+{"rank": 153, "name": "Tom x mars D4", "id": "55375237", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 12258579, "kp": 938386, "t5": 16, "t4": 83721, "dead": 633385},
+{"rank": 154, "name": "RoTuS F2", "id": "169614340", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 20930870, "kp": 916313, "t5": 29992, "t4": 10153, "dead": 1047795},
+{"rank": 155, "name": "USrust", "id": "138512076", "alliance": "", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/201123785/2025-08-11/A2F7559F2875C7883BB4452F548924DC_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_46.png", "power": 30441748, "kp": 910585, "t5": 21083, "t4": 63209, "dead": 135639},
+{"rank": 156, "name": "TomLoi20", "id": "141761542", "alliance": "R23G", "avatar": "https://plat-fau-global.lilithgame.com/p/IM/10043/0/21795355/2024-08-15/0DFB0C57982B882DC410851D6F982DE1_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 11083523, "kp": 894294, "t5": 1595, "t4": 71064, "dead": 951428},
+{"rank": 157, "name": "TomLoi11", "id": "31663502", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/roc/llc_avatar/31663502/23/08/24/81813752ab4c2361_648x648.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 22532684, "kp": 877282, "t5": 6412, "t4": 74223, "dead": 180682},
+{"rank": 158, "name": "NguyenHungPhat", "id": "138500580", "alliance": "N23V", "avatar": "https://plat-fau-global.lilithgame.com/p/astc/IM/10043/0/21754261/2026-01-25/2984561272927278DE7C62B73048BE23_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_1.png", "power": 15840013, "kp": 855216, "t5": 11655, "t4": 61808, "dead": 197605},
+{"rank": 159, "name": "义 TÔM义55", "id": "65587080", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/65587080/24/01/03/87111581ba49ee04_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_140.png", "power": 19501154, "kp": 807194, "t5": 31007, "t4": 18313, "dead": 348463},
+{"rank": 160, "name": "TomLoi1", "id": "30510290", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/roc/llc_avatar/30510290/23/08/24/c9d64564f264008d_648x648.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 23113598, "kp": 771732, "t5": 5616, "t4": 65918, "dead": 29192},
+{"rank": 161, "name": "Tom x mars D8", "id": "104488902", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 11007333, "kp": 767181, "t5": 38135, "t4": 80, "dead": 1137257},
+{"rank": 162, "name": "TomDuyen39", "id": "75642192", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/75642192/23/08/23/75138d6838e8cd2f_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_95.png", "power": 16817972, "kp": 734482, "t5": 1728, "t4": 68889, "dead": 819007},
+{"rank": 163, "name": "TomLoi6", "id": "144487025", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/144487025/23/12/25/6ada19bab41fa0e2_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 13480397, "kp": 729498, "t5": 72704, "t4": 603, "dead": 1073357},
+{"rank": 164, "name": "StitFarm 4 CH25", "id": "81788152", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 21869659, "kp": 694146, "t5": 27025, "t4": 13312, "dead": 865692},
+{"rank": 165, "name": "TomDuyen40", "id": "77511801", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 15813455, "kp": 602472, "t5": 59457, "t4": 1852, "dead": 1024201},
+{"rank": 166, "name": "TomLoi22", "id": "141762524", "alliance": "R23G", "avatar": "https://plat-fau-global.lilithgame.com/p/IM/10043/0/21795355/2024-08-15/0DFB0C57982B882DC410851D6F982DE1_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 10643956, "kp": 541075, "t5": 38, "t4": 41634, "dead": 667313},
+{"rank": 167, "name": "StitFarm 5 CH25", "id": "138401180", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 21690849, "kp": 539340, "t5": 26851, "t4": 232, "dead": 681627},
+{"rank": 168, "name": "TomLoi15", "id": "31663511", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/roc/llc_avatar/31663511/23/08/24/71dbe61c950f8a5a_648x648.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 19146438, "kp": 525223, "t5": 6943, "t4": 37460, "dead": 135832},
+{"rank": 169, "name": "JovyF62", "id": "158187792", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 11048828, "kp": 462062, "t5": 41789, "t4": 11043, "dead": 385813},
+{"rank": 170, "name": "Tom x mars D20", "id": "154138525", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 20399620, "kp": 414003, "t5": 41378, "t4": 1117, "dead": 53871},
+{"rank": 171, "name": "TomLoi12", "id": "39520931", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/roc/llc_avatar/39520931/23/08/24/07680d8d44713fb5_648x648.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 16933596, "kp": 356604, "t5": 35240, "t4": 578, "dead": 124653},
+{"rank": 172, "name": "boyfam2", "id": "203732173", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 13973274, "kp": 346682, "t5": 33973, "t4": 1738, "dead": 521882},
+{"rank": 173, "name": "boyfam333", "id": "203988433", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 12942175, "kp": 316177, "t5": 29961, "t4": 3823, "dead": 418119},
+{"rank": 174, "name": "Evergreеn F12", "id": "130674616", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 16252946, "kp": 311447, "t5": 18, "t4": 23079, "dead": 27932},
+{"rank": 175, "name": "Boyfam44", "id": "203990527", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 11312148, "kp": 243539, "t5": 23619, "t4": 1586, "dead": 407155},
+{"rank": 176, "name": "Tom x mars D7", "id": "63012362", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/63012362/23/08/23/9a95723e953b7ed6_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_95.png", "power": 17043677, "kp": 145231, "t5": 4243, "t4": 22868, "dead": 70721},
+{"rank": 177, "name": "义 TÔM义63", "id": "104397334", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/104397334/24/01/03/db8199ec22d11d28_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_131.png", "power": 17354214, "kp": 131260, "t5": 6475, "t4": 176, "dead": 0},
+{"rank": 178, "name": "JovyF63", "id": "151806059", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 9724477, "kp": 111262, "t5": 9623, "t4": 3758, "dead": 212730},
+{"rank": 179, "name": "Welfare F2", "id": "33658079", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 18916546, "kp": 102770, "t5": 8087, "t4": 5475, "dead": 140891},
+{"rank": 180, "name": "Tom x mars D9", "id": "65178446", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 16950506, "kp": 100420, "t5": 99, "t4": 5308, "dead": 49082},
+{"rank": 181, "name": "boyfam1", "id": "203731463", "alliance": "N23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 13139442, "kp": 90700, "t5": 9070, "t4": 0, "dead": 458617},
+{"rank": 182, "name": "TomLoi21", "id": "141760956", "alliance": "R23G", "avatar": "https://plat-fau-global.lilithgame.com/p/IM/10043/0/21795355/2024-08-15/0DFB0C57982B882DC410851D6F982DE1_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 14640920, "kp": 63170, "t5": 14, "t4": 6289, "dead": 217920},
+{"rank": 183, "name": "义 TÔM义57", "id": "109132850", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/109132850/24/01/03/b9f6150e1257d4b3_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_111.png", "power": 16603528, "kp": 56754, "t5": 2712, "t4": 4282, "dead": 32682},
+{"rank": 184, "name": "xXxBushxXx", "id": "150415685", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 18005330, "kp": 47540, "t5": 2377, "t4": 0, "dead": 651250},
+{"rank": 185, "name": "义 TÔM义56", "id": "106074633", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/106074633/24/01/03/5253564661159131_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_131.png", "power": 17059376, "kp": 40131, "t5": 2950, "t4": 2495, "dead": 178500},
+{"rank": 186, "name": "TomLoi17", "id": "141847666", "alliance": "R23G", "avatar": "https://plat-fau-global.lilithgame.com/p/IM/10043/0/21795355/2024-08-15/4C1A4758812469540065A381317CEECA_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 17310703, "kp": 29699, "t5": 2416, "t4": 2554, "dead": 0},
+{"rank": 187, "name": "Bek farm C", "id": "206454904", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 9683896, "kp": 27371, "t5": 50, "t4": 2623, "dead": 333000},
+{"rank": 188, "name": "义 TÔM义61", "id": "105657233", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/105657233/24/01/03/d6d3a82281c64f56_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_131.png", "power": 17234166, "kp": 22634, "t5": 1004, "t4": 751, "dead": 0},
+{"rank": 189, "name": "Tom x mars D19", "id": "154067868", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 20592546, "kp": 22422, "t5": 11211, "t4": 0, "dead": 0},
+{"rank": 190, "name": "Tom Duyen 39  1", "id": "104546143", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 12671986, "kp": 21903, "t5": 2114, "t4": 6620, "dead": 0},
+{"rank": 191, "name": "TomLoi8", "id": "144487762", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/144487762/23/12/25/c75546a27b418b45_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 15062085, "kp": 21740, "t5": 69, "t4": 10646, "dead": 0},
+{"rank": 192, "name": "TomLoi9", "id": "144531833", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/144531833/23/12/25/97d5cc431c495bb0_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 15575761, "kp": 20344, "t5": 1647, "t4": 151, "dead": 19300},
+{"rank": 193, "name": "Bek farm B", "id": "206437872", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 9865209, "kp": 16434, "t5": 36, "t4": 1563, "dead": 280230},
+{"rank": 194, "name": "Tom x mars D1", "id": "152971935", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 13428255, "kp": 14284, "t5": 1418, "t4": 26, "dead": 0},
+{"rank": 195, "name": "TomLoi4", "id": "59167177", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/roc/llc_avatar/59167177/23/08/24/30d5bc57fb3c5752_648x648.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 16646178, "kp": 11635, "t5": 5122, "t4": 6959, "dead": 0},
+{"rank": 196, "name": "TomLoi7", "id": "144528404", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/144528404/23/12/25/c108d98658055c1d_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 16095196, "kp": 10286, "t5": 634, "t4": 679, "dead": 0},
+{"rank": 197, "name": "TomLoi18", "id": "141847022", "alliance": "R23G", "avatar": "https://plat-fau-global.lilithgame.com/p/IM/10043/0/21795355/2024-08-15/0DFB0C57982B882DC410851D6F982DE1_250x250.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 17103201, "kp": 5776, "t5": 2548, "t4": 3403, "dead": 0},
+{"rank": 198, "name": "Bek farm A", "id": "175469024", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 12877019, "kp": 4376, "t5": 2188, "t4": 0, "dead": 0},
+{"rank": 199, "name": "TomLoi5", "id": "144531355", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/144531355/23/12/25/562a1dc0a5e4edad_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 15336339, "kp": 4360, "t5": 436, "t4": 0, "dead": 0},
+{"rank": 200, "name": "TomLoi10", "id": "144530780", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/llc_avatar/144530780/23/12/25/3c01a6ccf189ad33_800x800.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 15399975, "kp": 3947, "t5": 678, "t4": 602, "dead": 0},
+{"rank": 201, "name": "Evergreen F14", "id": "137956241", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 12093801, "kp": 3640, "t5": 182, "t4": 0, "dead": 2},
+{"rank": 202, "name": "TomDuyen42", "id": "81377128", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 16432321, "kp": 1060, "t5": 106, "t4": 1, "dead": 0},
+{"rank": 203, "name": "TomLoi3", "id": "59171063", "alliance": "R23G", "avatar": "https://imimg.lilithcdn.com/roc/llc_avatar/59171063/23/08/24/d57e600f5070f71d_648x648.jpg", "frame": "http://imimg.lilithcdn.com/roc/img_AvatarFrame_199.png", "power": 16627634, "kp": 0, "t5": 1, "t4": 0, "dead": 0},
+{"rank": 204, "name": "Jovyf23", "id": "113138885", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 13859753, "kp": 0, "t5": 0, "t4": 0, "dead": 0},
+{"rank": 205, "name": "JovyF6", "id": "137892435", "alliance": "M23V", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 13825976, "kp": 0, "t5": 0, "t4": 0, "dead": 0},
+{"rank": 206, "name": "Tom Nhim1", "id": "104480171", "alliance": "R23G", "avatar": "http://imimg.lilithcdn.com/roc/img_ProfileBg220x220_a.png", "frame": "", "power": 12570730, "kp": 0, "t5": 0, "t4": 0, "dead": 0}
+];
+
+const MAX_KP = 17708129362;
+let sortCol = 'kp', sortDir = -1, page = 1, perPage = 50, filtered = [...DATA];
+
+const fmt = n => (!n || n === 0) ? '—' : Number(n).toLocaleString();
+const MEDALS = {1:'🥇',2:'🥈',3:'🥉'};
+
+function applyFilters() {
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  filtered = DATA.filter(p =>
+    !q ||
+    p.name.toLowerCase().includes(q) ||
+    String(p.id).includes(q) ||
+    p.alliance.toLowerCase().includes(q)
+  );
+  page = 1;
+  renderTable();
+}
+
+function applySort() {
+  const v = document.getElementById('sort-select').value;
+  const [col, dir] = v.split('_');
+  sortCol = col;
+  sortDir = dir === 'desc' ? -1 : 1;
+  renderTable();
+}
+
+function renderTable() {
+  const sorted = [...filtered].sort((a, b) => {
+    const av = a[sortCol], bv = b[sortCol];
+    return (typeof av === 'string' ? av.localeCompare(bv) : av - bv) * sortDir;
+  });
+
+  const total = sorted.length;
+  const totalPages = Math.max(1, Math.ceil(total / perPage));
+  if (page > totalPages) page = totalPages;
+  const start = (page - 1) * perPage;
+  const rows = sorted.slice(start, start + perPage);
+
+  document.getElementById('count-shown').textContent = total
+    ? `${start + 1}–${Math.min(start + perPage, total)}` : '0';
+  document.getElementById('count-total').textContent = total.toLocaleString();
+
+  const tbody = document.getElementById('tbody');
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="9"><div class="no-results"><h3>No results</h3><p>Adjust your search.</p></div></td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = rows.map((p, i) => {
+    const displayRank = start + i + 1;
+    const avatarHtml = p.avatar
+      ? `<div class="gov-avatar-wrap">
+           <img class="gov-avatar-img" src="${p.avatar}" onerror="this.src='https://imimg.lilithcdn.com/roc/img_player_head_SP_01.png'" loading="lazy">
+           ${p.frame ? `<img class="gov-avatar-frame" src="${p.frame}" loading="lazy">` : ''}
+         </div>`
+      : '';
+    return `<tr>
+      <td class="rank-cell">${MEDALS[displayRank] || '#' + displayRank}</td>
+      <td>
+        <div class="name-cell-wrap">
+          ${avatarHtml}
+          <div>
+            <div class="name-text" title="${p.name}">${p.name}</div>
+            <div class="id-cell">${p.id}</div>
+          </div>
+        </div>
+      </td>
+      <td class="id-cell" style="display:none">${p.id}</td>
+      <td><span class="alliance-tag">${p.alliance || '—'}</span></td>
+      <td class="td-right kp-val">${fmt(p.kp)}</td>
+      <td class="td-right power-val">${fmt(p.power)}</td>
+      <td class="td-right t5-val">${fmt(p.t5)}</td>
+      <td class="td-right t4-val">${fmt(p.t4)}</td>
+      <td class="td-right dead-val">${fmt(p.dead)}</td>
+    </tr>`;
+  }).join('');
+
+  // Pagination
+  const pag = document.getElementById('pagination');
+  if (totalPages <= 1) { pag.innerHTML = ''; return; }
+  let h = `<button class="page-btn" onclick="goPage(${page - 1})" ${page === 1 ? 'disabled' : ''}>‹</button>`;
+  const rng = [];
+  for (let i = 1; i <= totalPages; i++) {
+    if (i === 1 || i === totalPages || (i >= page - 2 && i <= page + 2)) rng.push(i);
+    else if (rng[rng.length - 1] !== '…') rng.push('…');
+  }
+  rng.forEach(p2 => {
+    if (p2 === '…') h += `<span style="color:var(--muted);padding:0 4px">…</span>`;
+    else h += `<button class="page-btn ${p2 === page ? 'active' : ''}" onclick="goPage(${p2})">${p2}</button>`;
+  });
+  h += `<button class="page-btn" onclick="goPage(${page + 1})" ${page === totalPages ? 'disabled' : ''}>›</button>`;
+  pag.innerHTML = h;
+}
+
+function goPage(p2) {
+  if (p2 < 1) return;
+  page = p2;
+  renderTable();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+renderTable();
+</script>
+</body>
+</html>
