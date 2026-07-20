@@ -381,12 +381,12 @@ footer{
       </div>
       <div class="overview-item">
         <div class="ov-label">Total Power</div>
-        <div class="ov-value blue">8.2B</div>
+        <div class="ov-value blue">7.1B</div>
         <div class="ov-sub">Kingdom total power</div>
       </div>
       <div class="overview-item">
         <div class="ov-label">Total Kill Points</div>
-        <div class="ov-value cyan">214.8B</div>
+        <div class="ov-value cyan">212.5B</div>
         <div class="ov-sub">All-time KP earned</div>
       </div>
     </div>
@@ -466,10 +466,10 @@ footer{
 
 <script>
 const KVK = [
-  { kp:15.6, dead:112, tag:'current' },
-  { kp:13.5, dead:40,  tag:'' },
-  { kp:13.4, dead:76.8, tag:'' },
-  { kp:14.2, dead:85.4, tag:'' },
+  { kp:23.8, dead:126.1, tag:'current', name:'King of All Britain' },
+  { kp:15.6, dead:112,   tag:'', name:'' },
+  { kp:13.5, dead:40,    tag:'', name:'' },
+  { kp:13.4, dead:76.8,  tag:'', name:'' },
 ];
 
 document.getElementById('kvk-grid').innerHTML = KVK.map((k,i) => {
@@ -489,6 +489,7 @@ document.getElementById('kvk-grid').innerHTML = KVK.map((k,i) => {
   return `
   <div class="kvk-card ${k.tag}">
     <div class="kvk-number">${label}</div>
+    ${k.name ? `<div class="kvk-season-name">${k.name}</div>` : ''}
     <div class="kvk-stat">
       <span class="kvk-stat-label">Kill Points</span>
       <span class="kvk-stat-value kp">${k.kp}B</span>

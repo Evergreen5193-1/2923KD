@@ -244,10 +244,10 @@ footer{
 
 <script>
 const KVK = [
-  { label:'Latest KvK',  kp:15.6, dead:112,  current:true  },
-  { label:'1 KvK Ago',   kp:13.5, dead:40,   current:false },
-  { label:'2 KvKs Ago',  kp:13.4, dead:76.8, current:false },
-  { label:'3 KvKs Ago',  kp:14.2, dead:85.4, current:false },
+  { label:'Latest KvK',  name:'King of All Britain', kp:23.8,  dead:126.1, current:true  },
+  { label:'1 KvK Ago',   name:'',                    kp:15.6,  dead:112,   current:false },
+  { label:'2 KvKs Ago',  name:'',                    kp:13.5,  dead:40,    current:false },
+  { label:'3 KvKs Ago',  name:'',                    kp:13.4,  dead:76.8,  current:false },
 ];
 
 const maxKP   = Math.max(...KVK.map(k=>k.kp));
@@ -259,6 +259,7 @@ document.getElementById('kvk-cards').innerHTML = KVK.map((k,i)=>`
     <div class="kvk-card-header">
       <div>
         <div class="kvk-card-num">${i===0?'Latest KvK':'#'+i+' KvK Ago'}</div>
+      ${k.name?`<div style="font-size:11px;color:var(--cyan);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:4px">${k.name}</div>`:''}
       </div>
       ${k.current?'<span class="kvk-badge">Latest</span>':''}
     </div>
