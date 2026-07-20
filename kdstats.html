@@ -475,11 +475,9 @@ function renderTable(){
       <td class="rank-cell">${MEDALS[displayRank]||'#'+displayRank}</td>
       <td><div class="name-cell-wrap">${avatarHtml}<div><div class="name-text" title="${p.name}">${p.name}</div><div class="id-cell">${p.id}</div></div></div></td>
       <td>${p.alliance?`<span class="alliance-tag">${p.alliance}</span>`:'—'}</td>
+      <td class="td-right power-val">${fmt(p.power)}</td>
       <td class="td-right kp-val">${fmt(p.kp)}</td>
-      <td class="td-right t5-val">${fmt(p.t5)}</td>
-      <td class="td-right t4-val">${fmt(p.t4)}</td>
       <td class="td-right dead-val">${fmt(p.dead)}</td>
-      <td class="td-right heal-val">${fmt(p.healed)}</td>
     </tr>`;
   }).join('');
   const pag=document.getElementById('pagination');
